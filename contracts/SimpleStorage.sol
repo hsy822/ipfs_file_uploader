@@ -1,13 +1,15 @@
 pragma solidity ^0.5.0;
 
 contract SimpleStorage {
-  uint storedData;
 
-  function set(uint x) public {
-    storedData = x;
+  mapping (address => string) ipfsHash;
+
+  function set(string memory _hash) public {
+    ipfsHash[msg.sender] = _hash;
   }
 
-  function get() public view returns (uint) {
-    return storedData;
+  function get(address _user) public view returns (string memory) {
+    return ipfsHash[_user];
   }
+
 }
