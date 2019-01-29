@@ -15,6 +15,8 @@ Upload file on IPFS and save the returned 'ipfsHash' in Ethereum
 
 ## How to set it up?
 
+nodejs, truffle, ganache-cli should be installed.
+
 Clone this repository.
 ```
 $ git clone https://github.com/hsy822/ipfs_file_uploader.git
