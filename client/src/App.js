@@ -15,9 +15,6 @@ class App extends Component {
     contract: null
   };
 
-  captureFile = this.captureFile.bind(this)
-  onClick = this.onClick.bind(this)
-
   componentDidMount = async () => {
     try {
       // Get network provider and web3 instance.
@@ -49,7 +46,7 @@ class App extends Component {
     }
   };
 
-  captureFile(event) {
+  captureFile = (event) => {
     console.log('capture file...')
     event.preventDefault()
     const file = event.target.files[0]
@@ -61,27 +58,23 @@ class App extends Component {
     }
   }
 
-  onClick(event) {
+  onClick = (event) => {
     event.preventDefault()
+    console.log('submit...')
 
-    const { accounts, contract, buffer } = this.state;
+    const { buffer, coinBase, contract } = this.state;
 
     ipfs.files.add(buffer, (error, result) => {
-      console.log(contract)
+      
       if(error) {
         console.error(error)
         return
       }
-
       console.log('result', result)
 
-      contract.methods.set(result[0].hash).send({ from: this.state.coinBase })
+      contract.methods.set(result[0].hash).send({ from: coinBase })
       .then((result) => {
-        return contract.methods.get(this.state.coinBase).call()
-      })
-      .then((ipfsHash) => {
-        this.setState({ ipfsHash })
-        console.log(this.state.ipfsHash)
+        this.getFile()
       })
     })
     
@@ -91,7 +84,7 @@ class App extends Component {
     this.state.contract.methods.get(this.state.coinBase).call()
     .then((ipfsHash) => {
       this.setState({ ipfsHash })
-      console.log(this.state.ipfsHash)
+      console.log("ipfsHash", this.state.ipfsHash)
     })
   }
 
@@ -105,7 +98,7 @@ class App extends Component {
           <PublicAddress address={this.state.coinBase}></PublicAddress>
           <div className="pure-g">
             <div className="pure-u-1-1">             
-              <Heading>Upload your image on IPFS and save the file hash on Ethereum</Heading>
+              <Heading>Upload file on IPFS and save the returned 'ipfsHash' in Ethereum</Heading>
               <Image src={`https://ipfs.io/ipfs/${this.state.ipfsHash}`} alt=""></Image>
               <div style={{marginBottom : '20px'}}>
                 <Input type="file" onChange={this.captureFile}></Input>
